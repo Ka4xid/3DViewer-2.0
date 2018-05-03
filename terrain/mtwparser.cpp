@@ -258,7 +258,7 @@ ChunkData MTWParser::GetChunkData(uint row, uint col, LODlevel lodLevel, bool is
 
     foreach (float point_height, heightsArray) {
 
-        if (y>=chunk.width)
+        if (y >= chunk.width)
         {
             y = 0;
             x += 1;
@@ -278,8 +278,8 @@ ChunkData MTWParser::GetChunkData(uint row, uint col, LODlevel lodLevel, bool is
         chunk.pData.append( 0 );
         chunk.pData.append( 1 );
         // texels
-        chunk.pData.append( (1/((float)chunk.width-1)) * s );
-        chunk.pData.append( 1 - (1/((float)chunk.height-1)) * t );
+        chunk.pData.append( (1.0/((float)chunk.width - 1.0)) * s );
+        chunk.pData.append( 1.0 - (1.0/((float)chunk.height - 1.0)) * t );
 
         y += 1;
         s += 1;
@@ -310,17 +310,8 @@ ChunkData MTWParser::GetChunkData(uint row, uint col, LODlevel lodLevel, bool is
     chunk.leftTop.setX(     Matrix.leftTopX - ((row * Matrix.blockHeight) * Matrix.elementMeters));
     chunk.leftTop.setY(     Matrix.leftTopY + ((col * Matrix.blockWidth) * Matrix.elementMeters));
 
-    if (col < Matrix.blockColCount-1) {
-        chunk.rightBottom.setX( chunk.leftTop.x() + (Matrix.blockHeight+1) * Matrix.elementMeters);
-    } else {
-        chunk.rightBottom.setX( chunk.leftTop.x() + (Matrix.blockCutHeight+1) * Matrix.elementMeters);
-    }
-    if (row < Matrix.blockRowCount-1) {
-        chunk.rightBottom.setY( chunk.leftTop.y() + (Matrix.blockWidth+1) * Matrix.elementMeters);
-    } else {
-        chunk.rightBottom.setY( chunk.leftTop.y() + (Matrix.blockCutWidth+1) * Matrix.elementMeters);
-    }
-
+    chunk.rightBottom.setX( chunk.leftTop.x() + (Matrix.blockHeight+1) * Matrix.elementMeters);
+    chunk.rightBottom.setY( chunk.leftTop.y() + (Matrix.blockWidth+1) * Matrix.elementMeters);
 
 
     if (isReturn) {

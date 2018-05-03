@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     Viewer->TranslateObject("test", QVector3D());
 
-    Viewer->SetCameraPosition(QVector3D(6174350, 7403050, 0));
+    Viewer->SetCameraPosition(QVector3D(6166111.571, 7412153.522, 0));
 
     testValue = 0;
 }
