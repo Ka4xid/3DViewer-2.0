@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>checker.png</file>
+        <file>shaders/default.vert</file>
+        <file>shaders/default.frag</file>
+        <file>shaders/trajectory.vert</file>
+        <file>shaders/trajectory.frag</file>
+    </qresource>
+</RCC>
