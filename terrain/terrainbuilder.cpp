@@ -76,6 +76,7 @@ terrainObject* TerrainBuilder::CreateNewChunk()
 
 
 void TerrainBuilder::BindTexture(terrainObject* newChunk, QImage newTexturePath){
+    contextWidget->deleteTexture(newChunk->textureBuffer);
     newChunk->textureBuffer = contextWidget->bindTexture(newTexturePath, GL_TEXTURE_2D, GL_RGB);
     glBindTexture(GL_TEXTURE_2D, newChunk->textureBuffer);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

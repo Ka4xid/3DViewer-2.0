@@ -121,6 +121,7 @@ void TerrainHandler::Render()
             glBindVertexArray(chunk->VertexArrayObject);
             glBindTexture(GL_TEXTURE_2D, chunk->textureBuffer);
             glDrawElements(GL_TRIANGLES, chunk->vCount, GL_UNSIGNED_INT, 0 );
+            glBindTexture(GL_TEXTURE_2D, 0);
             glBindVertexArray(0);
         }
     }
