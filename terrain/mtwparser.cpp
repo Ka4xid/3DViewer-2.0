@@ -210,6 +210,12 @@ ChunkData MTWParser::GetChunkData(uint row, uint col, LODlevel lodLevel, bool is
                 heightsArray.insert( ((chunk.width * ((elementRow/lodLevel)+1)) + (elementRow/lodLevel)), height);
             }
             chunk.width++;
+        } else {
+            for (uint elementRow = 0; elementRow < currentBlock.height; elementRow+=lodLevel) {
+                float height = ReadElementInBlock(currentBlock, elementRow, currentBlock.width-1);
+                heightsArray.insert( ((chunk.width * ((elementRow/lodLevel)+1)) + (elementRow/lodLevel)), height);
+            }
+            chunk.width++;
         }
 
 
@@ -220,12 +226,21 @@ ChunkData MTWParser::GetChunkData(uint row, uint col, LODlevel lodLevel, bool is
                 heightsArray.append(height);
             }
             chunk.height++;
+        } else {
+            for (uint elementCol = 0; elementCol < currentBlock.width; elementCol+=lodLevel) {
+                float height = ReadElementInBlock(currentBlock, currentBlock.height-1, elementCol);
+                heightsArray.append(height);
+            }
+            chunk.height++;
         }
 
 
         if ( (row < Matrix.blockRowCount-1) && (col < Matrix.blockColCount-1)) {
             BlockData patchBlock = LoadBlock(row+1, col+1);
             float height = ReadElementInBlock(patchBlock, 0, 0);
+            heightsArray.append(height);
+        } else {
+            float height = ReadElementInBlock(currentBlock, currentBlock.height-1, currentBlock.width-1);
             heightsArray.append(height);
         }
     break;
