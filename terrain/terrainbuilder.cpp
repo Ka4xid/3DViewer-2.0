@@ -12,7 +12,7 @@ TerrainBuilder::TerrainBuilder(QGLWidget* widget, QObject *parent) : QObject(par
     texGen = new TerrainTextureGen();
     texGen->moveToThread(texGenThread);
     connect(this, SIGNAL(GenerateUpdateTexture(ChunkData,terrainObject*)),
-            texGen, SLOT(GenerateUpdateTexture(ChunkData,terrainObject*)), Qt::QueuedConnection);
+            texGen, SLOT(GenerateUpdateTexture(ChunkData,terrainObject*)), Qt::DirectConnection);
 
     connect(texGen, SIGNAL(textureReady(terrainObject*,QImage)),
             this, SLOT(UpdateChunkTexture(terrainObject*,QImage)), Qt::QueuedConnection);
@@ -46,7 +46,7 @@ void TerrainBuilder::GenerateAllChunks(QString newMtwFilePath)
 
     for (quint32 row = 0; row < mtwParser->Matrix.blockRowCount; row++) {
         for (quint32 column = 0; column < mtwParser->Matrix.blockColCount; column++ ) {
-            mtwParser->GetChunkData(row, column, lod_2);
+            mtwParser->GetChunkData(row, column, lod_3);
         }
     }
 
@@ -96,9 +96,7 @@ void TerrainBuilder::ReceiveChunkData(ChunkData newChunkData)
     newChunk->lodLevel = newChunkData.lodLevel;
 
 
-    //QImage newTexture = texGen->GenerateTexture(mapFilePath, newChunkData);
     emit GenerateUpdateTexture(newChunkData, newChunk);
-    //BindTexture(newChunk, newTexture);
 
 
     float translation_x = newChunkData.leftTop.x() - (newChunkData.height/2) * mtwParser->Matrix.elementMeters * newChunkData.lodLevel;

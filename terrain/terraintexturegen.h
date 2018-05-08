@@ -5,6 +5,8 @@
 #include <QRect>
 #include <QImage>
 #include <terrain/mtwparser.h>
+#include <QHash>
+
 
 class TerrainTextureGen : public QObject
 {
@@ -16,15 +18,24 @@ public:
     void SetNewMapPath(QString newMapFilePath);
 
 private:
+    bool isProcessing;
+
+private:
     QMap<terrainObject*, ChunkData> chunkQueue;
+    QVector< QMap<terrainObject*, ChunkData>::iterator > highResCounter,
+                                                         midResCounter,
+                                                         lowResCounter;
+
     QString mapFilePath;
 
 signals:
     void textureReady(terrainObject* chunk, QImage newTexture);
+    void StartProcess();
 
 public slots:
     void GenerateUpdateTexture(ChunkData chunkData,
                                terrainObject* chunk = 0);
+    void Process();
 
 };
 

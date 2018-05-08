@@ -11,6 +11,11 @@
 
 TerrainTextureGen::TerrainTextureGen(QObject *parent) : QObject(parent)
 {
+    isProcessing = false;
+
+    connect(this, SIGNAL(StartProcess()),
+            this, SLOT(Process()));
+
 }
 
 void TerrainTextureGen::SetNewMapPath(QString newMapFilePath)
@@ -21,12 +26,104 @@ void TerrainTextureGen::SetNewMapPath(QString newMapFilePath)
 void TerrainTextureGen::GenerateUpdateTexture(ChunkData chunkData,
                                               terrainObject *chunk)
 {
-    GenerateTexture(chunkData, chunk);
+
+
+    QMap<terrainObject*, ChunkData>::iterator iter = chunkQueue.insert(chunk, chunkData);
+
+    switch (chunkData.lodLevel) {
+    case lod_1: {
+        highResCounter.append(iter);
+        int id = midResCounter.indexOf(iter);
+        if (id > 0) {
+            midResCounter.remove(id);
+        }
+        id = lowResCounter.indexOf(iter);
+        if (id > 0) {
+            lowResCounter.remove(id);
+        }
+    } break;
+
+    case lod_2: {
+        midResCounter.append(iter);
+
+        int id = highResCounter.indexOf(iter);
+        if (id > 0) {
+            highResCounter.remove(id);
+        }
+        id = lowResCounter.indexOf(iter);
+        if (id > 0) {
+            lowResCounter.remove(id);
+        }
+    } break;
+
+    case lod_3: {
+        lowResCounter.append(iter);
+
+        int id = highResCounter.indexOf(iter);
+        if (id > 0) {
+            highResCounter.remove(id);
+        }
+        id = midResCounter.indexOf(iter);
+        if (id > 0) {
+            midResCounter.remove(id);
+        }
+    } break;
+
+    default:
+        break;
+    }
+
+    if (!isProcessing) {
+        emit StartProcess();
+    }
+
 }
 
+void TerrainTextureGen::Process()
+{
+    isProcessing = true;
 
-QImage TerrainTextureGen::GenerateTexture(ChunkData chunkData,
-                                          terrainObject *chunk )
+
+    while (isProcessing == true) {
+
+
+        QMap<terrainObject*, ChunkData>::iterator iter = chunkQueue.begin();
+
+
+        while (highResCounter.size() > 0) {
+            GenerateTexture(highResCounter.first().value(), highResCounter.first().key());
+            //chunkQueue.remove(highResCounter.first().key());
+            highResCounter.remove(0);
+        }
+
+        while (midResCounter.size() > 0) {
+            if (highResCounter.size() != 0) {
+                break;
+            }
+            GenerateTexture(midResCounter.first().value(), midResCounter.first().key());
+            //chunkQueue.remove(midResCounter.first().key());
+            midResCounter.remove(0);
+        }
+
+        while (lowResCounter.size() > 0) {
+            if ( (highResCounter.size() != 0) || (midResCounter.size() != 0))  {
+                break;
+            }
+            GenerateTexture(lowResCounter.first().value(), lowResCounter.first().key());
+            //chunkQueue.remove(lowResCounter.first().key());
+            lowResCounter.remove(0);
+        }
+
+        if ( chunkQueue.isEmpty() ) {
+            isProcessing = false;
+            break;
+        }
+    }
+
+}
+
+QImage TerrainTextureGen::GenerateTexture( ChunkData chunkData,
+                                           terrainObject *chunk )
 {
     QImage img;
 

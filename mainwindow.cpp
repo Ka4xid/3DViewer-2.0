@@ -12,7 +12,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     Viewer->TranslateObject("test", QVector3D());
 
-    Viewer->SetCameraPosition(QVector3D(6166111.571, 7412153.522, 0));
+    //Viewer->SetCameraPosition(QVector3D(6166111.571, 7412153.522, 0)); // PODOLSK
+    //Viewer->SetCameraPosition(QVector3D(3702346.778, 31549569.378, 0)); // ALGERIA
+    Viewer->SetCameraPosition(QVector3D(5407550, 8570850, 0)); // ASHULUK
 
     testValue = 0;
 }

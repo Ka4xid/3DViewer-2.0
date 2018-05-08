@@ -5,7 +5,7 @@ CameraClass::CameraClass(QGLWidget *parent) : QObject(parent)
 {
     setParent(parent);
 
-    orbitDistance = 100;
+    orbitDistance = 15000;
 }
 
 void CameraClass::Process()
