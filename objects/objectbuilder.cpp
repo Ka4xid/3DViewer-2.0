@@ -147,6 +147,8 @@ void ObjectBuilder::receiveMeshData(QVector<float> pointsData,
             glEnableVertexAttribArray(texels_location);
         }
 
+    glBindVertexArray(0);
+
 
     emit ObjectReady(newObject);
     this->deleteLater();

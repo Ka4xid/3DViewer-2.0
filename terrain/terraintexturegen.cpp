@@ -159,7 +159,6 @@ QImage TerrainTextureGen::GenerateTexture( ChunkData chunkData,
 
     if (hMap)
     {
-        QPainter p;
 
         mapSetRealShowScale(hMap, resolution);
 
@@ -197,8 +196,6 @@ QImage TerrainTextureGen::GenerateTexture( ChunkData chunkData,
         mapPaintToXImage(hMap, &Ximagedesc, 0, 0, &RectDraw);
 
         QImage image((uchar *)bits, width, height, QImage::Format_RGB32);
-
-        p.drawImage(Top, Left, image, width, height);
 
         img = image.copy();
 

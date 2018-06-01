@@ -18,12 +18,11 @@ void PLYparser::start(QString modelFilePath)
     QVector<float> verticesData;
     QVector<uint> verticesIndices;
 
-
-
     modelFile.setFileName(modelFilePath);
 
     if ( !modelFile.open(QIODevice::ReadOnly) ) {
         qDebug() << "No such file!";
+        this->deleteLater();
         return;
     }
 
@@ -39,6 +38,7 @@ void PLYparser::start(QString modelFilePath)
     line = Stream.readLine();
     if (line != "ply") {
         qDebug() << "Wrong file format!";
+        this->deleteLater();
         return;
     }
 
