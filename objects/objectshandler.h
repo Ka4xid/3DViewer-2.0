@@ -18,7 +18,7 @@ public:
 private:
     QGLWidget* contextWidget;
 
-    QVector<genericObject*> ObjectsArray;
+    QMap<QString, genericObject*> ObjectsArray;
 
     ObjectBuilder* objBuilder;
     TrajectoryBuilder* trajBuilder;

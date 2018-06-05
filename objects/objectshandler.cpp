@@ -13,7 +13,7 @@ ObjectsHandler::ObjectsHandler(QGLWidget *widget, QObject *parent) : QObject(par
 
 void ObjectsHandler::ReceiveNewObject(genericObject *newObject)
 {
-    ObjectsArray.append(newObject);
+    ObjectsArray.insertMulti(newObject->name, newObject);
 }
 
 void ObjectsHandler::Render()
@@ -125,23 +125,19 @@ void ObjectsHandler::MoveObject(QString name, QVector3D direction)
 }
 void ObjectsHandler::DeleteObject(QString name)
 {
-    uint id=0;
-    foreach (genericObject* object, ObjectsArray) {
-        if (object->name == name) {
+    QMap<QString, genericObject*>::iterator i = ObjectsArray.find(name);
 
-            ObjectsArray.remove(id);
-            ObjectsArray.squeeze();
+    while (i != ObjectsArray.end() && i.key() == name) {
 
-            object->shader->removeAllShaders();
-            object->shader->deleteLater();
-            object->vData->destroy();
-            object->vIndices->destroy();
-            contextWidget->deleteTexture(object->textureBuffer);
-            glDeleteVertexArrays(1, &object->VertexArrayObject);
-            object->deleteLater();
-        } else {
-            id++;
-        }
+        i.value()->shader->deleteLater();
+        i.value()->vData->destroy();
+        i.value()->vIndices->destroy();
+        contextWidget->deleteTexture(i.value()->textureBuffer);
+        glDeleteVertexArrays(1, &i.value()->VertexArrayObject);
+        i.value()->deleteLater();
+        ObjectsArray.erase(i);
+        ++i;
+
     }
 }
 
