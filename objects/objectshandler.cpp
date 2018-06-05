@@ -89,7 +89,6 @@ QVector3D ObjectsHandler::getObjectRotation(QString name)
     } else {
         return QVector3D();
     }
-
 }
 QVector3D ObjectsHandler::getObjectScale(QString name)
 {
@@ -132,7 +131,6 @@ void ObjectsHandler::DeleteObject(QString name)
     glDeleteVertexArrays(1, &i.value()->VertexArrayObject);
     i.value()->deleteLater();
     ObjectsArray.erase(i);
-    ++i;
 
 }
 
