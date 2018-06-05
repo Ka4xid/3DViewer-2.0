@@ -10,11 +10,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     Viewer = new ViewerClass(this, this);
 
-    Viewer->TranslateObject("test", QVector3D());
-
     //Viewer->SetCameraPosition(QVector3D(6166111.571, 7412153.522, 0)); // PODOLSK
     //Viewer->SetCameraPosition(QVector3D(3702346.778, 31549569.378, 0)); // ALGERIA
-    Viewer->SetCameraPosition(QVector3D(5407550, 8570850, 0)); // ASHULUK
+    //Viewer->SetCameraPosition(QVector3D(5407550, 8570850, 0)); // ASHULUK
+    Viewer->SetCameraPosition(QVector3D(0, 0, 0));
 
     testValue = 0;
 }
@@ -34,11 +33,6 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
     Viewer->getScenePointer()->keyPressEvent(e);
     if (e->key() == Qt::Key_1) {
         QVector<QVector3D> points;
-//        for (int n=0; n<=360; n+=10) {
-//            points.append(QVector3D(cos(n * 0.0174533) * 30,
-//                                    sin(n * 0.0174533) * 30,
-//                                    sin(n * 0.0174533) * 30 ));
-//        }
 
         points.clear();
         points.append(QVector3D(6174350, 7403050, 0));
@@ -54,6 +48,57 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
     }
 
     if (e->key() == Qt::Key_3) {
+        /*QString filePath = QFileDialog::getOpenFileName(this,
+                                                        "Select Model",
+                                                        "/home/fuego",
+                                                        "Stanford PLY files (*.ply)");
+        QString texturePath = filePath;
+        texturePath.chop(4);
+        texturePath += ".png";
+
+        Viewer->CreateObject()->setTexturePath(texturePath)
+                              ->setModelFilePath(filePath)
+                ->setScale(QVector3D(10,10,10))
+                ->Done();*/
+
+
+        QVector3D position;
+        bool even = false;
+
+        position = QVector3D(0, 0, 0);
+
+
+        for (int i=0; i < 5; i++) {
+            for (int j=0; j < 5; j++) {
+                for (int k=0; k < 5; k++) {
+                    if (even) {
+                        Viewer->CreateObject()->setTexturePath("/home/fuego/zsu.png")
+                                              ->setModelFilePath("/home/fuego/zsu.ply")
+                                ->setScale(QVector3D(10,10,10))
+                                ->setTranslation(position)
+                                ->Done();
+
+                        even = !even;
+                    } else {
+                        Viewer->CreateObject()->setTexturePath("/home/fuego/missile.png")
+                                              ->setModelFilePath("/home/fuego/missile.ply")
+                                ->setScale(QVector3D(10,10,10))
+                                ->setTranslation(position)
+                                ->Done();
+
+                        even = !even;
+                    }
+                    position.setZ(position.z()+100);
+                }
+                position.setX(position.x()+100);
+                position.setZ(0);
+            }
+            position.setY(position.y()+100);
+            position.setX(0);
+        }
+    }
+
+    if (e->key() == Qt::Key_4) {
         QString filePath = QFileDialog::getOpenFileName(this,
                                                         "Select Model",
                                                         "/home/fuego",
@@ -64,10 +109,9 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
 
         Viewer->CreateObject()->setTexturePath(texturePath)
                               ->setModelFilePath(filePath)
-                ->setScale(QVector3D(1,1,1))
+                ->setScale(QVector3D(50,50,50))
                 ->Done();
     }
-
 
     if (e->key() == Qt::Key_Q) {
 
@@ -100,9 +144,9 @@ void MainWindow::testTimedFunction()
     testValue+=0.05;
 
     QVector3D v;
-    v.setX(sin(testValue) /3);
-    v.setY(cos(testValue) /3);
-    v.setZ(sin(testValue) /4);
+    v.setX(sin(testValue) * 3 );
+    v.setY(cos(testValue) * 3 );
+    v.setZ(sin(testValue) * 4 );
 
     Viewer->MoveObjectByDir("default", v);
 }
