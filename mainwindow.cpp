@@ -133,6 +133,7 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
         connect(timer, SIGNAL(timeout()), this, SLOT(testTimedFunction()) );
         timer->start(10);
     }
+
 }
 void MainWindow::keyReleaseEvent(QKeyEvent *e)
 {
@@ -141,12 +142,18 @@ void MainWindow::keyReleaseEvent(QKeyEvent *e)
 
 void MainWindow::testTimedFunction()
 {
-    testValue+=0.05;
+    testValue+=0.01;
 
     QVector3D v;
-    v.setX(sin(testValue) * 3 );
-    v.setY(cos(testValue) * 3 );
-    v.setZ(sin(testValue) * 4 );
+    v.setX(sin(testValue) * 5 );
+    v.setY(cos(testValue) * 5 );
+    v.setZ(sin(testValue) * 0.5 );
 
     Viewer->MoveObjectByDir("default", v);
+
+    QVector3D s = QVector3D(abs(cos(testValue+1) * 100),
+                            abs(cos(testValue+1) * 100),
+                            abs(cos(testValue+1) * 100) );
+
+    Viewer->ScaleObject("default", s);
 }

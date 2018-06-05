@@ -13,7 +13,7 @@ ObjectsHandler::ObjectsHandler(QGLWidget *widget, QObject *parent) : QObject(par
 
 void ObjectsHandler::ReceiveNewObject(genericObject *newObject)
 {
-    ObjectsArray.insertMulti(newObject->name, newObject);
+    ObjectsArray.insert(newObject->name, newObject);
 }
 
 void ObjectsHandler::Render()
@@ -51,57 +51,55 @@ void ObjectsHandler::CreateObject(QString name,
 }
 void ObjectsHandler::TranslateObject(QString name, QVector3D newTranslation)
 {
-    foreach (genericObject* object, ObjectsArray) {
-        if (object->name == name) {
-            object->translation = newTranslation;
-            break;
-        }
-    }
+    QMap<QString, genericObject*>::iterator iter = ObjectsArray.find(name);
+
+    if (iter != ObjectsArray.end())
+        iter.value()->translation = newTranslation;
 }
 void ObjectsHandler::RotateObject(QString name, QVector3D newRotation)
 {
-    foreach (genericObject* object, ObjectsArray) {
-        if (object->name == name) {
-            object->rotation = newRotation;
-            break;
-        }
-    }
+    QMap<QString, genericObject*>::iterator iter = ObjectsArray.find(name);
+
+    if (iter != ObjectsArray.end())
+        iter.value()->rotation = newRotation;
 }
 void ObjectsHandler::ScaleObject(QString name, QVector3D newScale)
 {
-    foreach (genericObject* object, ObjectsArray) {
-        if (object->name == name) {
-            object->scale = newScale;
-            break;
-        }
-    }
+    QMap<QString, genericObject*>::iterator iter = ObjectsArray.find(name);
+
+    if (iter != ObjectsArray.end())
+        iter.value()->scale = newScale;
 }
 QVector3D ObjectsHandler::getObjectTranslation(QString name)
 {
-    foreach (genericObject* object, ObjectsArray) {
-        if (object->name == name) {
-            return object->translation;
-        }
+    QMap<QString, genericObject*>::iterator iter = ObjectsArray.find(name);
+
+    if ( iter != ObjectsArray.end() ) {
+        return iter.value()->translation;
+    } else {
+        return QVector3D();
     }
-    return QVector3D();
 }
 QVector3D ObjectsHandler::getObjectRotation(QString name)
 {
-    foreach (genericObject* object, ObjectsArray) {
-        if (object->name == name) {
-            return object->rotation;
-        }
+    QMap<QString, genericObject*>::iterator iter = ObjectsArray.find(name);
+
+    if ( iter != ObjectsArray.end() ) {
+        return iter.value()->rotation;
+    } else {
+        return QVector3D();
     }
-    return QVector3D();
+
 }
 QVector3D ObjectsHandler::getObjectScale(QString name)
 {
-    foreach (genericObject* object, ObjectsArray) {
-        if (object->name == name) {
-            return object->scale;
-        }
+    QMap<QString, genericObject*>::iterator iter = ObjectsArray.find(name);
+
+    if ( iter != ObjectsArray.end() ) {
+        return iter.value()->scale;
+    } else {
+        return QVector3D();
     }
-    return QVector3D();
 }
 void ObjectsHandler::MoveObject(QString name, QVector3D direction)
 {
@@ -127,18 +125,15 @@ void ObjectsHandler::DeleteObject(QString name)
 {
     QMap<QString, genericObject*>::iterator i = ObjectsArray.find(name);
 
-    while (i != ObjectsArray.end() && i.key() == name) {
+    i.value()->shader->deleteLater();
+    i.value()->vData->destroy();
+    i.value()->vIndices->destroy();
+    contextWidget->deleteTexture(i.value()->textureBuffer);
+    glDeleteVertexArrays(1, &i.value()->VertexArrayObject);
+    i.value()->deleteLater();
+    ObjectsArray.erase(i);
+    ++i;
 
-        i.value()->shader->deleteLater();
-        i.value()->vData->destroy();
-        i.value()->vIndices->destroy();
-        contextWidget->deleteTexture(i.value()->textureBuffer);
-        glDeleteVertexArrays(1, &i.value()->VertexArrayObject);
-        i.value()->deleteLater();
-        ObjectsArray.erase(i);
-        ++i;
-
-    }
 }
 
 void ObjectsHandler::CreateTrajectory(QString name, QVector<QVector3D> points)
