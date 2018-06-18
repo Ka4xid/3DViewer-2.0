@@ -124,14 +124,18 @@ void ObjectsHandler::DeleteObject(QString name)
 {
     QMap<QString, genericObject*>::iterator i = ObjectsArray.find(name);
 
-    i.value()->shader->deleteLater();
-    i.value()->vData->destroy();
-    i.value()->vIndices->destroy();
-    contextWidget->deleteTexture(i.value()->textureBuffer);
-    glDeleteVertexArrays(1, &i.value()->VertexArrayObject);
-    i.value()->deleteLater();
-    ObjectsArray.erase(i);
+    if (i != ObjectsArray.end()) {
 
+        i.value()->shader->deleteLater();
+        i.value()->vData->destroy();
+        i.value()->vIndices->destroy();
+        contextWidget->deleteTexture(i.value()->textureBuffer);
+        glDeleteVertexArrays(1, &i.value()->VertexArrayObject);
+        i.value()->deleteLater();
+        ObjectsArray.erase(i);
+    } else {
+        return;
+    }
 }
 
 void ObjectsHandler::CreateTrajectory(QString name, QVector<QVector3D> points)
