@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QDebug>
 #include <QtConcurrentRun>
+#include <QTime>
 
 // that include MUST BE LAST, else - wont compile
 #include "mapapi.h"
@@ -69,6 +70,21 @@ void TerrainTextureGen::GenerateUpdateTexture(ChunkData chunkData,
         }
     } break;
 
+    case lod_0: {
+        int id = highResCounter.indexOf(iter);
+        if (id > 0) {
+            highResCounter.remove(id);
+        }
+        id = midResCounter.indexOf(iter);
+        if (id > 0) {
+            midResCounter.remove(id);
+        }
+        id = lowResCounter.indexOf(iter);
+        if (id > 0) {
+            lowResCounter.remove(id);
+        }
+    } break;
+
     default:
         break;
     }
@@ -114,7 +130,7 @@ void TerrainTextureGen::Process()
             lowResCounter.remove(0);
         }
 
-        if ( chunkQueue.isEmpty() ) {
+        if ( highResCounter.isEmpty() && midResCounter.isEmpty() && lowResCounter.isEmpty() ) {
             isProcessing = false;
             break;
         }

@@ -46,10 +46,9 @@ void TerrainBuilder::GenerateAllChunks(QString newMtwFilePath)
 
     for (quint32 row = 0; row < mtwParser->Matrix.blockRowCount; row++) {
         for (quint32 column = 0; column < mtwParser->Matrix.blockColCount; column++ ) {
-            mtwParser->GetChunkData(row, column, lod_3);
+            mtwParser->GetChunkData(row, column, lod_0);
         }
     }
-
 }
 
 

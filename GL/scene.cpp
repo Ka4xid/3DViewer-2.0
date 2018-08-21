@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QTimer>
 
-#define MOVE_STEP 500
+#define MOVE_STEP 5000
 #define SENSITIVITY 3
 
 
@@ -45,7 +45,7 @@ void Scene::resizeGL(int w, int h)
     glViewport(0,0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    SetPerspective(50, 3, 10000, ((float)(this->width()) / (float)(this->height())));
+    SetPerspective(50, 300, 50000, ((float)(this->width()) / (float)(this->height())));
 }
 
 void Scene::SetPerspective(float fov, float Znear, float Zfar, float aspect)

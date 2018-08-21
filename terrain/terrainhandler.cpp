@@ -91,8 +91,11 @@ void TerrainHandler::ProcessLODs()
         if ( (distance > 6000) && (distance <= 15000) && (chunk->lodLevel != lod_2) ) {
             terrBuilder->UpdateChunk(chunk, lod_2);
         } else
-        if ( (distance > 15000)  && (chunk->lodLevel != lod_3) ) {
+        if ( (distance > 15000) && (distance <= 100000)&& (chunk->lodLevel != lod_3) ) {
             terrBuilder->UpdateChunk(chunk, lod_3);
+        }
+        if ( (distance > 100000)  && (chunk->lodLevel != lod_0) ) {
+            terrBuilder->UpdateChunk(chunk, lod_0);
         }
     }
 }
